@@ -15,12 +15,13 @@ public class GameManager {
 	private Route route = new Route();
 	private InputValidation check = new InputValidation();
 	
-	public GameManager() {
+	public GameManager(GameManagerInterface ui) {
 		trader = new Trader();
 		data = new LoadGameData();
 		ships = data.createAllShips();
 		islands = data.createAllIslands(trader);
 		setHomeIslandRandomly();
+		this.ui = ui;
 	};
 	
 	
@@ -30,13 +31,14 @@ public class GameManager {
 		trader.setCurrentIsland(islands.get(number));
 	}
 	
-	public void setUp(GameManagerInterface mgrInterface) {
-		ui = mgrInterface;
+	
+	public void start() {
 		ui.getUserName();
 		ui.getDaysToPlay();
 		ui.chooseShip(ships);
 		ui.readyToPlay();
 	}
+	
 	
 	public boolean setName(String name) {
 		if (check.validName(name)) {
@@ -47,6 +49,7 @@ public class GameManager {
 		}
 	}
 	
+	
 	public boolean updateDays(String days) {
 		if (check.validNumberInRange(days, 20, 50)) {
 			trader.setDaysToPlay(Integer.parseInt(days));
@@ -54,6 +57,7 @@ public class GameManager {
 		}
 		return false;
 	}
+	
 	
 	public boolean updateShip(String input) {
 		if (check.validNumberInRange(input, 1, 4)) {
