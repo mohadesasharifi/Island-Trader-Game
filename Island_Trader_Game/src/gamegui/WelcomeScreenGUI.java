@@ -19,8 +19,8 @@ import java.awt.FlowLayout;
 public class WelcomeScreenGUI {
 
 	private JFrame frmIslandTrader;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField txtName;
+	private JTextField txtDays;
 
 	/**
 	 * Launch the application.
@@ -64,35 +64,35 @@ public class WelcomeScreenGUI {
 		panel_1.setBounds(101, 6, 445, 40);
 		panel.add(panel_1);
 		
-		JLabel lblNewLabel = new JLabel("Welcome to the Island Trader Game");
-		panel_1.add(lblNewLabel);
-		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD | Font.ITALIC, 20));
+		JLabel lblWelcome = new JLabel("Welcome to the Island Trader Game");
+		panel_1.add(lblWelcome);
+		lblWelcome.setFont(new Font("Lucida Grande", Font.BOLD | Font.ITALIC, 20));
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBounds(101, 152, 445, 48);
 		panel.add(panel_3);
 		
-		JLabel lblNewLabel_2 = new JLabel("Days to play:");
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblNewLabel_2.setFont(new Font("Lucida Grande", Font.ITALIC, 14));
-		panel_3.add(lblNewLabel_2);
+		JLabel lblDaysToPlay = new JLabel("Days to play:");
+		lblDaysToPlay.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblDaysToPlay.setFont(new Font("Lucida Grande", Font.ITALIC, 14));
+		panel_3.add(lblDaysToPlay);
 		
-		textField_1 = new JTextField();
-		panel_3.add(textField_1);
-		textField_1.setColumns(15);
+		txtDays = new JTextField();
+		panel_3.add(txtDays);
+		txtDays.setColumns(15);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBounds(101, 108, 445, 40);
 		panel.add(panel_2);
 		
-		JLabel lblNewLabel_1 = new JLabel("Enter Name:");
-		lblNewLabel_1.setFont(new Font("Lucida Grande", Font.ITALIC, 14));
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.TRAILING);
-		panel_2.add(lblNewLabel_1);
+		JLabel lblName = new JLabel("Enter Name:");
+		lblName.setFont(new Font("Lucida Grande", Font.ITALIC, 14));
+		lblName.setHorizontalAlignment(SwingConstants.TRAILING);
+		panel_2.add(lblName);
 		
-		textField = new JTextField();
-		panel_2.add(textField);
-		textField.setColumns(15);
+		txtName = new JTextField();
+		panel_2.add(txtName);
+		txtName.setColumns(15);
 		
 		JPanel panel_4 = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panel_4.getLayout();
@@ -100,14 +100,14 @@ public class WelcomeScreenGUI {
 		panel_4.setBounds(101, 205, 445, 48);
 		panel.add(panel_4);
 		
-		JLabel lblNewLabel_3 = new JLabel("Choose your ship:");
-		lblNewLabel_3.setFont(new Font("Lucida Grande", Font.ITALIC, 14));
-		lblNewLabel_3.setHorizontalAlignment(SwingConstants.TRAILING);
-		panel_4.add(lblNewLabel_3);
+		JLabel lblChooseShip = new JLabel("Choose your ship:");
+		lblChooseShip.setFont(new Font("Lucida Grande", Font.ITALIC, 14));
+		lblChooseShip.setHorizontalAlignment(SwingConstants.TRAILING);
+		panel_4.add(lblChooseShip);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setEditable(true);
-		panel_4.add(comboBox);
+		JComboBox cmbChooseShip = new JComboBox();
+		cmbChooseShip.setEditable(true);
+		panel_4.add(cmbChooseShip);
 		
 		JPanel panel_5 = new JPanel();
 		panel_5.setBounds(223, 338, 193, 59);
