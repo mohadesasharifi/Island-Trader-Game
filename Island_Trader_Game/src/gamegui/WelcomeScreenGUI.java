@@ -6,58 +6,58 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Window;
 import java.awt.Color;
+import java.awt.Container;
+
 import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import models.GameManager;
+import models.Ship;
+
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.FlowLayout;
 
-public class WelcomeScreenGUI {
-
-	private JFrame frmIslandTrader;
+public class WelcomeScreenGUI extends Screen{
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	private JTextField txtName;
 	private JTextField txtDays;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					WelcomeScreenGUI window = new WelcomeScreenGUI();
-					window.frmIslandTrader.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	private JComboBox cmbChooseShip;
+	private String isValid;
+	private JLabel lblError;
+	private JButton btnStartGame;
+	
+	
+	protected WelcomeScreenGUI(GameManager manager) {
+		super("Welcome screen", manager);
 	}
-
+	
+	
 	/**
-	 * Create the application.
+	 * @wbp.parser.entryPoint
 	 */
-	public WelcomeScreenGUI() {
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		frmIslandTrader = new JFrame();
-		frmIslandTrader.setForeground(Color.BLACK);
-		frmIslandTrader.setFont(new Font("Dialog", Font.BOLD, 12));
-		frmIslandTrader.setTitle("Island Trader");
-		frmIslandTrader.setBounds(100, 100, 650, 480);
-		frmIslandTrader.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	@Override
+	protected void initialize(Container container) {
 		
 		JPanel panel = new JPanel();
-		frmIslandTrader.getContentPane().add(panel, BorderLayout.CENTER);
+		container.add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 		
 		JPanel panel_1 = new JPanel();
@@ -67,6 +67,41 @@ public class WelcomeScreenGUI {
 		JLabel lblWelcome = new JLabel("Welcome to the Island Trader Game");
 		panel_1.add(lblWelcome);
 		lblWelcome.setFont(new Font("Lucida Grande", Font.BOLD | Font.ITALIC, 20));
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBounds(101, 108, 445, 40);
+		panel.add(panel_2);
+		
+		JLabel lblName = new JLabel("Enter Name:");
+		lblName.setFont(new Font("Lucida Grande", Font.ITALIC, 14));
+		lblName.setHorizontalAlignment(SwingConstants.TRAILING);
+		panel_2.add(lblName);
+		
+		txtName = new JTextField();
+		panel_2.add(txtName);
+		txtName.setColumns(15);
+		txtName.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				txtFieldContinue(txtName);
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				txtFieldContinue(txtName);
+
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				txtFieldContinue(txtName);
+
+			}
+		});
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBounds(101, 152, 445, 48);
@@ -81,19 +116,6 @@ public class WelcomeScreenGUI {
 		panel_3.add(txtDays);
 		txtDays.setColumns(15);
 		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(101, 108, 445, 40);
-		panel.add(panel_2);
-		
-		JLabel lblName = new JLabel("Enter Name:");
-		lblName.setFont(new Font("Lucida Grande", Font.ITALIC, 14));
-		lblName.setHorizontalAlignment(SwingConstants.TRAILING);
-		panel_2.add(lblName);
-		
-		txtName = new JTextField();
-		panel_2.add(txtName);
-		txtName.setColumns(15);
-		
 		JPanel panel_4 = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panel_4.getLayout();
 		flowLayout.setAlignOnBaseline(true);
@@ -105,20 +127,47 @@ public class WelcomeScreenGUI {
 		lblChooseShip.setHorizontalAlignment(SwingConstants.TRAILING);
 		panel_4.add(lblChooseShip);
 		
-		JComboBox cmbChooseShip = new JComboBox();
-		cmbChooseShip.setEditable(true);
-		panel_4.add(cmbChooseShip);
+//		cmbChooseShip = new JComboBox();
+//		for(Ship ship: getManager().getShips()){
+//			cmbChooseShip.addItem(ship.getName());
+//		
+//		}
+//		cmbChooseShip.setEditable(true);
+//		panel_4.add(cmbChooseShip);
 		
 		JPanel panel_5 = new JPanel();
 		panel_5.setBounds(223, 338, 193, 59);
 		panel.add(panel_5);
 		
-		JButton btnStartGame = new JButton("Start Game");
+		btnStartGame = new JButton("Start Game");
+		btnStartGame.setForeground(Color.BLACK);
 		btnStartGame.setFont(new Font("Lucida Grande", Font.BOLD, 20));
-		btnStartGame.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+		btnStartGame.setEnabled(false);
+		btnStartGame.addActionListener(e -> setupComplete());
 		panel_5.add(btnStartGame);
+		
+		JPanel panel_6 = new JPanel();
+		panel_6.setBounds(101, 68, 445, 40);
+		panel.add(panel_6);
+		
+		lblError = new JLabel("");
+		lblError.setFont(new Font("Tahoma", Font.ITALIC, 12));
+		lblError.setHorizontalAlignment(SwingConstants.CENTER);
+		panel_6.add(lblError);
+	}
+	
+	private void txtFieldContinue(JTextField txtField) {
+		boolean validtxtFeild = getManager().ValidName(txtField.getText());
+
+		// Hide the name requirements text if the input is valid
+		lblError.setText(validtxtFeild ? null : getManager().getName());
+		btnStartGame.setEnabled(validtxtFeild);
+		show();
+	}
+	
+	private void setupComplete() {
+		getManager().onSetupFinished(txtName.getText(), txtDays.getText());
 	}
 }
+	
+

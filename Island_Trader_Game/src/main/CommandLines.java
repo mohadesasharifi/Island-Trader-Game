@@ -5,6 +5,8 @@ import validations.InputValidation;
 import java.text.NumberFormat;
 import java.util.*;
 import models.*;
+import transaction_interface.GameManagerInterface;
+import transaction_interface.ManagerInterface;
 
 /**
  * Command-line operations of the Game Island Trader
@@ -14,7 +16,7 @@ import models.*;
  *
  */
 
-public class CommandLines {
+public class CommandLines implements ManagerInterface{
 	// Instance of class InputValidation with variable check to check all the user inputs
 	InputValidation check = new InputValidation();
 	
@@ -56,6 +58,39 @@ public class CommandLines {
 	public CommandLines() {};
 	
 	
+	@Override
+	public void setup(GameManager gameManager) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public boolean confirmQuit() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public void quit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void showError(String error) {
+		// TODO Auto-generated method stub
+		
+	}
 	/**
 	 * this method returns user's name
 	 * @return returns users' name is String format
@@ -107,7 +142,7 @@ public class CommandLines {
 	}
 	
 	
-	public void play() {
+	public void setTrader() {
 		trader = new Trader();
 		LoadGameData data = new LoadGameData();
 		final ArrayList<Ship> ships = data.createAllShips();
@@ -681,6 +716,10 @@ public class CommandLines {
 		scanner.close();
 		return string;
 	}
+
+
+
+
 	
 	
 }

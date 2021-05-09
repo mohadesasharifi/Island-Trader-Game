@@ -1,23 +1,22 @@
 package main;
 
-import models.GameManager;
-import models.WelcomeScreen;
-import transaction_interface.GameManagerInterface;
+import models.*;
+import javax.swing.SwingUtilities;
+
+import gamegui.*;
+import transaction_interface.*;
 
 public class Main {
 	
 	
 	public static void main(String[] args) {
-		//LoadGameData data = new LoadGameData();
-		
-		if (args.length > 0 && (args[0].equals("cmd"))) {
-			CommandLines command = new CommandLines();
-			command.play();
-		}else {
-			GameManagerInterface ui = new WelcomeScreen();
-			GameManager manager = new GameManager(ui);
-			manager.start();
-		}
-		
+		LoadGameData data = new LoadGameData();
+		ManagerInterface ui;
+//		CommandLines command = new CommandLines();
+//		command.setTrader();
+		ui = new Gui();
+		GameManager manager = new GameManager(ui);
+        SwingUtilities.invokeLater(() -> manager.start());
+	
 	}
 }
