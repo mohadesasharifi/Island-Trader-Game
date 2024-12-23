@@ -2,6 +2,7 @@ package models;
 import transaction_interface.*;
 import java.util.*;
 
+
 /**
  * This class creates an instance of Trader
  * @author Zahid Khan
@@ -12,7 +13,7 @@ public class Trader implements TransactionProcess{
 	// String to contain name of trader
 	private String name;
 	// Double to contain trader's money/coins
-	private double currentCoins = 400;
+	private double currentCoins = 600;
 	// ArrayLIst of type Item to contain all the bought items
 	private ArrayList<Item> itemsBought = new ArrayList<Item>();
 	// ArrayList of type Item to contains all the sold items
@@ -29,6 +30,8 @@ public class Trader implements TransactionProcess{
 	private Island currentIsland = homeIsland;
 	// integer to contain the game duration
 	private double daysToPlay = 0;
+	
+	private String upgradeOutput = "";
 	
 	
 	/**
@@ -256,7 +259,7 @@ public class Trader implements TransactionProcess{
 	 * @param item of type {@link Item}, that you'd like to purchase
 	 * @param quantity of type Integer, the number of items
 	 */
-	public void purchase(Item item, int quantity) {
+	public String purchase(Item item, int quantity) {
 		Store currentStore = currentIsland.getStore();
 		double cost = (item.getSellPrice() * quantity);
 		if (quantity > 0) {
@@ -265,25 +268,28 @@ public class Trader implements TransactionProcess{
 					subtractCoins(cost);
 					currentStore.makePurchase(item, cost, quantity);
 				}else {
-					System.out.println("you don't have enough coins.");
+					return ("you don't have enough coins.");
 				}
 			}else {
-				System.out.println("You don't have enough space on you ship.");
+				return ("You don't have enough space on you ship.");
 			}
 		}else {
-			System.out.println("Quantity must be greater than 0 to proceed with purchase.");
+			return ("Quantity must be greater than 0 to proceed with purchase.");
 		}
+		return upgradeOutput;
 	}
 	
 	
 	/**
 	 * After the purchase is completed, bought items are added to an array, if the item bought is an upgrad
-	 * which is used straight away hence not added to the {@link ItemBought} array.
-	 * @param newitem of type {@link Item}, an item that we bought
+	 * which is used straight away hence not added to the ItemBought array.
+	 * @param newItem of type Item, an item that we bought
 	 * @param quantity of type Integer, the number of items bought
 	 */
-	public void addToItemsBought(Item newItem, int quantity){
+	public String addToItemsBought(Item newItem, int quantity){
 		boolean found = false;
+		upgradeOutput = "";
+		String output = "";
 		if(!(newItem.getType().equalsIgnoreCase("Upgrade"))){
 			for (Item item: itemsBought) {
 				if (item.getProductName().equalsIgnoreCase(newItem.getProductName())&&
@@ -299,35 +305,41 @@ public class Trader implements TransactionProcess{
 				getCurretShip().loadProducts(quantity);
 			}
 		}else {
-			useUpgrades(newItem, quantity);
+			output = useUpgrades(newItem, quantity);
 		}
+		return output;
 	}
 	
 	
 	/**
 	 * upgrades are used straight away and are not re-sell able
-	 * @param newitem type item upgrades
+	 * @param newItem type item upgrades
 	 * @param quantity type Integer number of upgrades
 	 */
-	public void useUpgrades(Item newItem, int quantity) {
+	public String useUpgrades(Item newItem, int quantity) {
 		currentShip.addInstallUpgrades(newItem);
 		if (newItem.getProductName().equalsIgnoreCase("Cargo Space")) {
 			currentShip.upgradeCargoCapacity(quantity);
-			System.out.println("You've upgraded your ships' Cargo Capacity");
-			System.out.println("New Cargo Capacity: " + currentShip.getAvailableStorage());
+			upgradeOutput += ("You've upgraded your ships' Cargo Capacity");
+			upgradeOutput += ("New Cargo Capacity: " + currentShip.getAvailableStorage());
+			return upgradeOutput;
 		}else if(newItem.getProductName().equalsIgnoreCase("Durability")) {
 			currentShip.upgradeDurability(quantity);
-			System.out.println("You've upgraded your ships' durability");
-			System.out.println("New Durability: " + currentShip.getDurability());
+			upgradeOutput += ("You've upgraded your ships' durability");
+			upgradeOutput += ("New Durability: " + currentShip.getDurability());
+			return upgradeOutput;
 		}else if(newItem.getProductName().equalsIgnoreCase("Engine")) {
 			currentShip.upgradeSpeed(quantity);
-			System.out.println("You've upgraded your ships' speed");
-			System.out.println("New Speed: " + currentShip.getSpeed());
+			upgradeOutput += ("You've upgraded your ships' speed");
+			upgradeOutput += ("New Speed: " + currentShip.getSpeed());
+			return upgradeOutput;
 		}else if (newItem.getProductName().equalsIgnoreCase("Cannon")) {
 			currentShip.addCannons(quantity);
-			System.out.println("You've added cannon/s to your ship");
-			System.out.println("The total number of Cannons on your ship: " + currentShip.getNumberOfCannons());
+			upgradeOutput += ("You've added cannon/s to your ship");
+			upgradeOutput += ("The total number of Cannons on your ship: " + currentShip.getNumberOfCannons());
+			return upgradeOutput;
 		}
+		return upgradeOutput;
 	}
 	
 	
@@ -351,14 +363,15 @@ public class Trader implements TransactionProcess{
 	 * and new item is added to the {@link itemsBought} Array
 	 */
 	@Override
-	public void purchaseSuccessfull(String name, double buyPrice, int quantity, String type, String units) {
+	public String purchaseSuccessfull(String name, double buyPrice, int quantity, String type, String units) {
 		Item newItem = new Item(name);
 		newItem.setBuyPrice(buyPrice);
 		newItem.setQuantity(quantity);
 		newItem.setType(type);
 		newItem.setBoughtFrom(getCurrentIsland().getStore().getName());
 		newItem.setUnits(units);
-		addToItemsBought(newItem, quantity);
+		String output = addToItemsBought(newItem, quantity);
+		return output;
 	}
 	
 	
@@ -367,9 +380,9 @@ public class Trader implements TransactionProcess{
 	 * this implementation of interface is used when a purchase is not successful,
 	 * an error message is printed
 	 */
-	public void purchaseUnsuccessfull(String error, double coins) {
+	public String purchaseUnsuccessfull(String error, double coins) {
 		this.addCoins(coins);
-		System.out.println(error);
+		return (error);
 		
 	}
 	
@@ -379,19 +392,20 @@ public class Trader implements TransactionProcess{
 	 * @param item of type {@link Item} that you want to sell
 	 * @param quantity of type Integer, the amount you want to sell
 	 */
-	public void sellItem(Item item, int quantity) {
+	public String sellItem(Item item, int quantity) {
 		Store currentStore = currentIsland.getStore();
 		Item boughtItem = findItem(item.getProductName());
 		if (boughtItem != null && boughtItem.getQuantityAvailble() > 0) {
 			currentStore.makeSale(item, quantity);
 		}else {
-			System.out.println("You don't have enough " + item.getProductName());
+			return ("You don't have enough " + item.getProductName());
 		}
+		return "Successful";
 	}
 	
 	
 	/**
-	 * after the sale of an item is completed, the item is added to the {@link itemSold} array
+	 * after the sale of an item is completed, the item is added to the itemSold array
 	 * @param product of type {@link Item}, that you want to sell
 	 * @param quantity of type Integer, the number of items you want to sell
 	 */
@@ -407,7 +421,7 @@ public class Trader implements TransactionProcess{
 	 * and added to the array {@link itemsSold}
 	 */
 	@Override
-	public void successfullSale(String name, double sellPrice, int tempQuantity, double coins, String units) {
+	public String successfullSale(String name, double sellPrice, int tempQuantity, double coins, String units) {
 		addCoins(coins);
 		Item item = findItem(name);
 		item.updateQuantity(item.getQuantityAvailble()-tempQuantity);
@@ -416,15 +430,15 @@ public class Trader implements TransactionProcess{
 		newItem.setSoldTo(getCurrentIsland().getStore().getName());
 		newItem.setUnits(units);
 		addToItemsSold(newItem, tempQuantity);
-		
+		return "Successful";
 	}
 	
 	
 	/**
 	 * Interface Implementation of unsuccessful sale, and the error message is printed
 	 */
-	public void unsuccessfullSale(String error) {
-		System.out.println(error);
+	public String unsuccessfullSale(String error) {
+		return (error);
 	}
 	
 	
@@ -435,12 +449,18 @@ public class Trader implements TransactionProcess{
 	 */
 	public String getBoughtItems() {
 		String result = "";
+		if (itemsBought.size() == 0) {
+			return "You have not purchased anything yet.";
+		}
 		for (Item item: itemsBought) {
 			result += item.buyDetails() + "\n";
 		}
 		return result;
 	}
 	
+	public ArrayList<Item> getBoughtList(){
+		return allBoughtItems();
+	}
 	
 	/**
 	 * this method returns all the items sold in String representation
@@ -449,6 +469,9 @@ public class Trader implements TransactionProcess{
 	 */
 	public String getSoldItems() {
 		String result = "";
+		if (itemsSold.size() == 0) {
+			return "You have not sold anything yet";
+		}
 		for (Item item: itemsSold) {
 			result += item.saleDetails() + "\n";
 		}
@@ -475,5 +498,6 @@ public class Trader implements TransactionProcess{
 	public String toString(){
 		return String.format("I am a trader. My name is %s.\nMy home island is %s, I have %s coins.\nMy current ships is %s", name, homeIsland.getName(), currentCoins, currentShip.getName()); 
 	}
+	
 	
 }

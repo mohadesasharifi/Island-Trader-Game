@@ -3,15 +3,21 @@ package main;
 import java.util.*;
 import java.io.*;
 import models.*;
+/**
+ * this model helps the game load all the data, like ships, stores, islands, routes and events.
+ * @author Zahid Khan
+ *
+ */
+
 
 public class LoadGameData {
 	// Constants for Island descriptions
 	private String[] DESCRIPTIONS = new String[] 
-			{"Island is famous for it's Vegetables",
-			 "Island is famous for it's fruits",
-			 "Island is famous for manufacturing",
-			 "Island is famous for it's beaches",
-			 "Island is famous for it's green meadows and high mountains"};
+			{"This island is famous for it's Vegetables",
+			 "This island is famous for it's fruits",
+			 "This island is famous for manufacturing",
+			 "This island is famous for it's beaches",
+			 "This island is famous for it's green meadows and high mountains"};
 	
 	// this constant has names for all the stores
 	private String[] STORENAMES = new String[] {"Coin Save", "The Mega",
@@ -28,13 +34,19 @@ public class LoadGameData {
 	
 	// Array which will contain all the ships
 	private ArrayList<Ship> allShips = new ArrayList<Ship>();
+	
 	// Array which will contain all the islands
 	private ArrayList<Island> allIslands = new ArrayList<Island>();
+	
 	// Array which will contain all the stores 
 	private ArrayList<Store> allStores = new ArrayList<Store>();
+	
 	// Array which will contain all the Events - bad or good
 	private ArrayList<Event> events = new ArrayList<Event>();
 	
+	/**
+	 * constructor for Load Game Data
+	 */
 	public LoadGameData() {};
 	
 	/**
@@ -78,7 +90,8 @@ public class LoadGameData {
 	
 	
 	/**
-	 * this method creates all the store by reading the names of stores form a Constant Array 
+	 * this method creates all the store by reading the names of stores form a Constant Array
+	 * @param trader
 	 * @return an Array containing all the stores
 	 */
 	public ArrayList<Store> createAllStores(Trader trader) {
